@@ -1,115 +1,134 @@
-<h1 align="center">In-House Legal for Claude Code</h1>
+# In-House Legal for Claude Code
 
-<p align="center">
-  <strong>The open-source in-house legal team system that is just a database and Claude Code.</strong>
-</p>
+Requests from the business, matters, key dates, contract renewals, company filings, outside counsel budgets and CPD in a database you own. Built by Enterprise DNA. Works with Claude Code, Codex, OpenCode or Cursor.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+| Do it yourself | We customise it | We run it for you |
+|---|---|---|
+| Free source under MIT. Install and run the demo. | Your business units, matter types, rules and Xakia data mapped across. | Installed, connected and operated through Omni by Enterprise DNA. |
+| [Quick start](#quick-start) | [Get your version built](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=xakia) | [Setup fee, then a retainer](https://enterprisedna.co/omni/instead-of/xakia?utm_source=github&utm_medium=readme&utm_campaign=xakia) |
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Xakia data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=xakia">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/xakia?utm_source=github&utm_medium=readme&utm_campaign=xakia">How it works</a></td>
-  </tr>
-</table>
+## What this runs
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-xakia">Instead of Xakia</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
+The week of an in-house legal team at a company with a few hundred staff: triaging what the business asks for, turning requests into matters, chasing next steps, watching court, regulator and limitation dates, catching contract notice deadlines before a contract rolls over, filing annual returns for every company in the group, keeping outside counsel inside budget, and reporting legal demand and cost to the board by business unit. It also tracks practising certificate dates and CPD for each lawyer.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
+[Xakia's pricing page](https://www.xakiatech.com/pricing) lists Advance at US$100, Professional at US$125, Enterprise at US$155 and All-In at US$230 per user per month (checked 11 November 2026). A ten-person legal team on Enterprise is US$18,600 a year at that rate. That is arithmetic from the published price, not a customer invoice.
 
----
-
-## What is this
-
-In-House Legal for Claude Code does the job you pay Xakia for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the Xakia dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays Xakia per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=xakia).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
+The free base covers the records and the weekly work. It has no requester portal, document storage, email integration or external counsel portal, which Xakia includes. [What a screen still gives you](docs/why-no-front-end.md).
 
 ## Quick start
 
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Requires Node.js 20 or newer. No database install for the demo.
 
 ```bash
 git clone https://github.com/Enterprise-DNA-OS/in-house-legal-for-claude-code.git
 cd in-house-legal-for-claude-code
 npm install
+npm test
 npm run demo
+npm run view
+npm run docs
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+Open the folder in your coding agent and type `/attention`. The fictional demo is the legal team of a New Zealand and Australian distributor: a limitation date 48 days out, a regulator response due in six days, two software and payroll contracts past their notice date with no decision, a law firm at 96% of budget, a lawyer whose practising certificate ends in 20 days, two requests past the triage service level and a lease matter that has gone quiet. Dates move with the day you seed.
 
-### Use it with your own Postgres or Supabase
-
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+For your own records, start with an empty `DATA_DIR`, run `npm run migrate` and add your team. Never run the demo seed against business records. To share one database, set `DATABASE_URL` in `.env` to your own Postgres and run `npm run migrate`. Tables have row-level security on with no public policies, so nothing is open to anonymous web clients. The CLI is for trusted members of the legal team.
 
 ## The commands
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
-
 | Command | What it does |
 |---|---|
-| `/...` | ... |
+| `/add` | Add any record. |
+| `/attention` | Everything that needs a decision now, in priority order. |
+| `/audit` | Who changed which record and when. |
+| `/board-report` | The legal report for the board or executive. |
+| `/card` | Read one record in full. |
+| `/close-matter` | Close a matter with its outcome. |
+| `/closed` | Closed matters and their outcomes. |
+| `/compliance` | Check the records against the professional and company rules, with each source cited. |
+| `/contracts` | The contract register. |
+| `/convert` | Turn a request into a matter. |
+| `/cpd` | CPD hours recorded this year for each lawyer. |
+| `/customise` | Make this legal team system yours: a field, a stage, a rule. |
+| `/decline` | Decline a request with the reason recorded. |
+| `/draft-board-report` | Save the board report as a draft page. |
+| `/draft-instruction` | Draft an instruction letter to the external firm on a matter. |
+| `/draft-renewal-notice` | Draft a renewal or non-renewal notice for a contract. |
+| `/draft-weekly-review` | Save the weekly review as a draft page. |
+| `/export` | Export every record to CSV and one JSON snapshot. |
+| `/filed` | Record that a company filing is done. |
+| `/filings` | Company annual returns and annual reviews due. |
+| `/firms` | External firms, panel status and agreed rates. |
+| `/import` | Bring a matter or contract register across from Xakia. |
+| `/instruction` | Everything external counsel needs on a matter. |
+| `/invoices` | Law firm invoices received. |
+| `/key-dates` | Court, regulator, filing and limitation dates still open. |
+| `/log` | Add a note to a matter. |
+| `/matters` | Open matters, highest risk first, with next steps and last activity. |
+| `/new-view` | Add a read-only HTML view (a dashboard page) from a plain-language description, rendered in the operator's brand by `npm run view`. |
+| `/notes` | Recent matter notes. |
+| `/renewal` | Record the renewal decision on a contract. |
+| `/renewals` | Contracts ending in the next year and their notice deadlines. |
+| `/requests` | Every request from the business: new, triaged, declined or turned into a matter. |
+| `/spend` | Outside counsel spend against budget. |
+| `/team` | The legal team, practising certificate dates included. |
+| `/triage` | Triage a new request: assign it to someone on the legal team. |
+| `/units` | Legal demand and cost by business unit. |
+| `/update` | Change fields on a record. |
+| `/weekly-review` | The Monday legal team review, from three commands. |
+| `/workload` | Who on the legal team is carrying what. |
+
+`npm run view` renders three read-only pages: the legal week, dates that cannot move, and outside counsel spend. `npm run docs` renders a matter status report per open matter, a report per business unit, a renewal review per contract near its notice date, and a register entry per company, in your brand from `brand.json`.
+
+## Ten questions to ask on day one
+
+1. Which business unit sent us the most requests in the last 90 days, and how many days did each wait for triage?
+2. Which auto-renewing contracts reach their notice deadline in the next 90 days with no renewal decision recorded?
+3. Which open matters have no next step, or a next step already overdue?
+4. Which outside firm is at or over 90% of budget, on which matter, excluding disputed invoices?
+5. Who on the team is holding more than three high-risk matters?
+6. Which limitation dates fall in the next 60 days on matters still open?
+7. Which companies in the group have an annual return or annual review due in the next 60 days?
+8. Which lawyers are behind pace on CPD hours this year, and whose practising certificate ends first?
+9. How much did each business unit cost in outside counsel over the last 12 months?
+10. Which panel firm appointments end in the next 30 days?
+
+## Your first hour: ten things to ask for
+
+1. "Add our legal team and their practising certificate dates."
+2. "Import our matter register from this spreadsheet." (`/import`, dry run first)
+3. "Add every company in the group with its filing month or review date."
+4. "Load our contract list and show what reaches its notice date this quarter."
+5. "Change the triage service level to one day." (`/customise`)
+6. "Add a matter type for whistleblower disclosures."
+7. "What does Operations cost us in outside counsel?"
+8. "Draft the instruction letter to Harbour Lane on the freight dispute."
+9. "Write this month's board report."
+10. "Make me a page I can print for Monday's team meeting." (`/new-view`)
 
 ## Instead of Xakia
 
-<!-- TODO(author): how to bring data across from Xakia; link docs/replace-xakia.md -->
+Read [docs/replace-xakia.md](docs/replace-xakia.md). Xakia lists PDF dashboard exports and API access on every plan; save your matter or contract register as CSV and import it with one command, test run first.
+
+## Rules it checks
+
+[docs/compliance.md](docs/compliance.md) lists every check with its source: practising certificate dates, CPD hours (10 a year in New Zealand), recorded limitation dates, New Zealand annual returns and Australian annual reviews. It never calculates a limitation period or gives legal advice.
 
 ## Architecture
 
 ```
-in-house-legal-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
+CLAUDE.md, AGENTS.md          how the agent runs this (routing table and rules)
+.claude/commands/             one recipe per recurring job
+scripts/legal.mjs             the one CLI, --json on every command
+scripts/lib/db.mjs            DATABASE_URL (Postgres) or the embedded database
+supabase/migrations/          the schema, plain SQL
+supabase/seed.sql             the fictional demo
+views.json, documents.json    the read-only pages and documents
 ```
-
-## Built for coding agents
-
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
-
-## Contributing
-
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
 
 ## Want it installed and run for you?
 
-Enterprise DNA installs In-House Legal for Claude Code for your business, migrates your Xakia data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
-
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=xakia)
-- Read more: [enterprisedna.co/omni/instead-of/xakia](https://enterprisedna.co/omni/instead-of/xakia?utm_source=github&utm_medium=readme&utm_campaign=xakia)
+Enterprise DNA installs In-House Legal for Claude Code for your team, maps your Xakia records across, connects it to your inbox and document store, and runs it as part of Omni. One setup fee, then a monthly retainer. [Book a call](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=xakia).
 
 ## License
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+MIT. Copyright (c) 2026 Enterprise DNA. Xakia is a trademark of its owner. This project is not affiliated with or endorsed by Xakia Technologies.

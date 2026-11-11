@@ -1,0 +1,12 @@
+[
+  "Which business unit sent us the most requests in the last 90 days, and how many days did each wait for triage?",
+  "Which auto-renewing contracts reach their notice deadline in the next 90 days with no renewal decision recorded?",
+  "Which open matters have no next step, or a next step already overdue?",
+  "Which outside firm is at or over 90% of budget, on which matter, excluding disputed invoices?",
+  "Who on the team is holding more than three high-risk matters?",
+  "Which limitation dates fall in the next 60 days on matters still open?",
+  "Which companies in the group have an annual return or annual review due in the next 60 days?",
+  "Which lawyers are behind pace on CPD hours this year, and whose practising certificate ends first?",
+  "How much did each business unit cost in outside counsel over the last 12 months?",
+  "Which panel firm appointments end in the next 30 days?"
+]

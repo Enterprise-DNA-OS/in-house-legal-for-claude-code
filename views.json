@@ -1,14 +1,30 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "In-House Legal for Claude Code: what needs attention, rendered by npm run view",
+    "title": "The legal week",
+    "subtitle": "What needs a decision, what is waiting and who is carrying it.",
     "sections": [
-      {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
-      }
+      { "title": "Needs attention", "sql": "select priority,ref,category,detail from v_attention order by priority,category,ref" },
+      { "title": "Requests waiting", "sql": "select ref,title,business_unit,urgency,received_on,days_waiting,status from v_requests where status in ('new','triaged') order by days_waiting desc" },
+      { "title": "Team workload", "sql": "select name,kind,open_matters,high_risk,overdue_steps,requests_to_scope from v_workload order by high_risk desc,open_matters desc" }
+    ]
+  },
+  {
+    "name": "dates",
+    "title": "Dates that cannot move",
+    "subtitle": "Court, regulator, filing and limitation dates, contract notice deadlines and company filings.",
+    "sections": [
+      { "title": "Matter key dates", "sql": "select matter,owner,kind,due_on,days_left,description from v_key_dates where not done order by due_on" },
+      { "title": "Contract notice deadlines", "note": "Notice by is the end date less the notice period recorded. Check the clause itself before relying on it.", "sql": "select ref,title,counterparty,end_on,notice_days,notice_by,renewal_decision from v_renewals where auto_renews and end_on>=current_date order by notice_by" },
+      { "title": "Company filings", "sql": "select ref,name,jurisdiction,next_due,last_filed_on from v_filings order by next_due" }
+    ]
+  },
+  {
+    "name": "spend",
+    "title": "Outside counsel spend",
+    "sections": [
+      { "title": "Against budget", "sql": "select matter,name,firm,budget_cents/100 budget,spent_cents/100 spent,disputed_cents/100 disputed,pct_of_budget from v_spend order by pct_of_budget desc nulls last" },
+      { "title": "By business unit, last 12 months", "sql": "select name,requests_90d,open_matters,high_risk,outside_spend_12m_cents/100 outside_spend from v_business_units order by outside_spend_12m_cents desc" }
     ]
   }
 ]

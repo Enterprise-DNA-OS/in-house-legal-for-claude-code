@@ -1,11 +1,45 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "matter-status",
+    "title": "Matter status report",
+    "for_each": "select id,ref as name from matters where status<>'closed' order by ref",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      { "title": "Matter", "layout": "record", "sql": "select ref,name,business_unit,owner,category,risk,status,opened_on,next_step,next_step_due,firm,budget_cents/100 budget,spent_cents/100 invoiced from v_matters where id=$1" },
+      { "title": "Key dates", "sql": "select kind,due_on,description,done from key_dates where matter_id=$1 order by due_on" },
+      { "title": "History", "sql": "select created_at::date as on_date,body from notes where matter_id=$1 order by created_at" },
+      { "title": "Invoices", "sql": "select f.name firm,i.invoice_no,i.invoice_date,i.amount_cents/100 amount,i.status from invoices i join firms f on f.id=i.firm_id where i.matter_id=$1 order by i.invoice_date" }
+    ]
+  },
+  {
+    "name": "business-unit-report",
+    "title": "Legal report for a business unit",
+    "for_each": "select id,name from business_units order by ref",
+    "file": "name",
+    "sections": [
+      { "title": "Summary", "layout": "record", "sql": "select v.name,v.requests_90d,v.open_matters,v.high_risk,v.outside_spend_12m_cents/100 outside_spend_12m,v.avg_days_to_triage from v_business_units v join business_units b on b.ref=v.ref where b.id=$1" },
+      { "title": "Open matters", "sql": "select m.ref,m.name,m.owner,m.risk,m.next_step,m.next_step_due from v_matters m join matters x on x.id=m.id where x.business_unit_id=$1 and x.status<>'closed' order by m.ref" },
+      { "title": "Requests in the last 90 days", "sql": "select ref,title,received_on,status from requests where business_unit_id=$1 and received_on>=current_date-90 order by received_on" },
+      { "title": "Contracts ending in the next year", "sql": "select ref,title,counterparty,end_on,auto_renews,end_on-notice_days notice_by from contracts where business_unit_id=$1 and status='signed' and end_on between current_date and current_date+365 order by end_on" }
+    ]
+  },
+  {
+    "name": "renewal-review",
+    "title": "Contract renewal review",
+    "for_each": "select id,ref as name from contracts where status='signed' and auto_renews and end_on between current_date and current_date+180 order by end_on",
+    "file": "name",
+    "sections": [
+      { "title": "Contract", "layout": "record", "sql": "select ref,title,counterparty,business_unit,owner,end_on,notice_days,notice_by,annual_value_cents/100 annual_value,renewal_decision from v_renewals where id=$1" },
+      { "title": "Decision needed", "note": "Record the decision with the renewal command: renew, renegotiate, notice given or let expire. Check the notice clause for the method of service.", "sql": "select case when renewal_decision='' then 'No decision recorded' else 'Decision: '||renewal_decision end as status, notice_by-current_date as days_to_notice from v_renewals where id=$1" }
+    ]
+  },
+  {
+    "name": "entity-register",
+    "title": "Company register entry",
+    "for_each": "select id,name from entities where status='active' order by ref",
+    "file": "name",
+    "sections": [
+      { "title": "Company", "layout": "record", "sql": "select ref,name,jurisdiction,registration_no,next_due,last_filed_on,directors from v_filings where id=$1" }
     ]
   }
 ]

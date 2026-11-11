@@ -1,10 +1,10 @@
 {
   "_": "Your business on every document and view. Change these and run `npm run docs` or `npm run view`.",
-  "business_name": "Your Business",
+  "business_name": "Demo Distribution Legal",
   "logo_path": "",
-  "primary": "#6654f5",
-  "accent": "#ca5a8b",
-  "ink": "#0b0c18",
+  "primary": "#1f3a5f",
+  "accent": "#b5651d",
+  "ink": "#14171f",
   "paper": "#ffffff",
-  "footer_line": "Prepared with In-House Legal for Claude Code."
+  "footer_line": "Fictional demo records. Privileged and confidential when used for real matters."
 }
